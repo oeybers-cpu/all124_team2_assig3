@@ -1,0 +1,444 @@
+```html
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3 Preparation Tool</title>
+    <style>
+        :root {
+            --dark-blue: #00008B;
+            --accent-orange: #FFA500;
+            --light-blue: #E6F7FF;
+            --soft-yellow: #FFFACD;
+            --gray-border: #E0E0E0;
+            --light-gray: #F8F9FA;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #000000;
+            background: #FFFFFF;
+            line-height: 1.8;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        }
+        .nav {
+            width: 20%;
+            background: var(--dark-blue);
+            color: #FFFFFF;
+            padding: 2rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .nav li {
+            margin: 0.8rem 0;
+        }
+        .nav a {
+            color: var(--accent-orange);
+            text-decoration: none;
+            display: block;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 165, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: rgba(255, 165, 0, 0.1);
+            transform: translateX(3px);
+        }
+        .nav a:hover:before {
+            left: 0;
+        }
+        .nav a.active {
+            background: rgba(255, 165, 0, 0.2);
+            color: white;
+            font-weight: 700;
+        }
+        .nav h3 {
+            color: #FFFFFF;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
+        .main {
+            width: 80%;
+            margin-left: 20%;
+            padding: 2rem;
+            overflow-y: auto;
+            background: var(--light-gray);
+        }
+        .section-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--accent-orange);
+            color: var(--dark-blue);
+            position: relative;
+        }
+        .section-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-blue);
+        }
+        .section-header p {
+            color: #555;
+            font-size: 1rem;
+            max-width: 800px;
+        }
+        .main section {
+            display: none;
+            padding: 1.8rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--accent-orange);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .main section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .main section h2 {
+            color: var(--dark-blue);
+            border-bottom: 1px solid var(--gray-border);
+            padding-bottom: 0.6rem;
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+        button {
+            background: var(--accent-orange);
+            color: #000000;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 5px rgba(255, 165, 0, 0.2);
+        }
+        button:hover {
+            background: #e69500;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 165, 0, 0.3);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 1rem;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: var(--accent-orange);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.1);
+        }
+        .highlight {
+            background: var(--soft-yellow);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        .tip {
+            background: var(--light-blue);
+            padding: 1.2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--dark-blue);
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        }
+        .tip h4 {
+            color: var(--dark-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .uk-spelling {
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent-orange);
+        }
+        .stats-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .stats-list {
+            list-style: none;
+        }
+        .stats-list li {
+            padding: 0.6rem 0;
+            border-bottom: 1px dashed var(--gray-border);
+        }
+        .stats-list li:last-child {
+            border-bottom: none;
+        }
+        .stats-list li strong {
+            color: var(--dark-blue);
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .grid-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 3px solid var(--accent-orange);
+        }
+        .grid-item h4 {
+            color: var(--dark-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            .nav {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1.5rem;
+            }
+            .main {
+                width: 100%;
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+            .nav a {
+                padding: 0.7rem;
+                font-size: 0.95rem;
+            }
+            .main {
+                padding: 1rem;
+            }
+            .main section {
+                padding: 1.2rem;
+            }
+            .section-header h2 {
+                font-size: 1.4rem;
+            }
+            .tip {
+                padding: 1rem;
+            }
+        }
+        .progress-bar {
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent-orange);
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .download-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        .download-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <h3>Assignment 3 Preparation Tool</h3>
+            <ul>
+                <li><a href="#topic-finalisation" class="active">Topic Finalisation</a></li>
+                <li><a href="#thesis-finalisation">Thesis Finalisation</a></li>
+                <li><a href="#thesis-justification">Thesis Justification</a></li>
+                <li><a href="#data-identification">Data Identification</a></li>
+                <li><a href="#team-roles">Team Roles</a></li>
+                <li><a href="#steps-to-be-taken">Steps to be Taken</a></li>
+            </ul>
+        </div>
+        <div class="main">
+            <div class="section-header">
+                <h2>Assignment 3 Preparation Tool</h2>
+                <p>Helping teams structure their Argumentation Presentation. Navigate through the sections to plan each component.</p>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <section id="topic-finalisation" class="active">
+                <h2>Topic Finalisation</h2>
+                <p>Teams must finalize their chosen theme from Assignment 2. Write your team's chosen topic below and any decisions made during discussion.</p>
+                <textarea id="topicFinalisation" placeholder="Enter your team's final topic and decisions here..."></textarea>
+                <div class="action-buttons">
+                    <button class="download-btn" onclick="downloadSpecificNotes('topicFinalisation')">Download Notes</button>
+                    <p class="note-message">Your notes will be saved as a .txt file on your device.</p>
+                </div>
+            </section>
+            <section id="thesis-finalisation">
+                <h2>Thesis Finalisation</h2>
+                <p>State your team's clear position on the chosen topic. This should be a concise statement that takes a specific stance on the issue.</p>
+                <textarea id="thesisFinalisation" placeholder="Enter your thesis statement here..."></textarea>
+                <div class="action-buttons">
+                    <button class="download-btn" onclick="downloadSpecificNotes('thesisFinalisation')">Download Notes</button>
+                    <p class="note-message">Your notes will be saved as a .txt file on your device.</p>
+                </div>
+            </section>
+            <section id="thesis-justification">
+                <h2>Thesis Justification</h2>
+                <p>List 2-3 main reasons supporting your thesis. These should be strong, evidence-based points that form the core of your argument.</p>
+                <textarea id="thesisJustification" placeholder="Enter your main reasons here..."></textarea>
+                <div class="action-buttons">
+                    <button class="download-btn" onclick="downloadSpecificNotes('thesisJustification')">Download Notes</button>
+                    <p class="note-message">Your notes will be saved as a .txt file on your device.</p>
+                </div>
+            </section>
+            <section id="data-identification">
+                <h2>Data Identification</h2>
+                <p>Identify qualitative and quantitative data from Assignment 2 articles. Include sources and how they support your argument.</p>
+                <textarea id="dataIdentification" placeholder="List data sources and how they support your argument..."></textarea>
+                <div class="action-buttons">
+                    <button class="download-btn" onclick="downloadSpecificNotes('dataIdentification')">Download Notes</button>
+                    <p class="note-message">Your notes will be saved as a .txt file on your device.</p>
+                </div>
+            </section>
+            <section id="team-roles">
+                <h2>Team Roles</h2>
+                <p>Assign specific roles to each team member. Examples: Leader, Researcher, Visual Designer, Translator, AI Image Generator, Presenter.</p>
+                <textarea id="teamRoles" placeholder="List roles and assigned members here..."></textarea>
+                <div class="action-buttons">
+                    <button class="download-btn" onclick="downloadSpecificNotes('teamRoles')">Download Notes</button>
+                    <p class="note-message">Your notes will be saved as a .txt file on your device.</p>
+                </div>
+            </section>
+            <section id="steps-to-be-taken">
+                <h2>Steps to be Taken</h2>
+                <p>Outline the specific tasks and deadlines for each team member. Include timelines and milestones for preparation.</p>
+                <textarea id="stepsTaken" placeholder="List tasks, responsible members, and deadlines..."></textarea>
+                <div class="action-buttons">
+                    <button class="download-btn" onclick="downloadSpecificNotes('stepsTaken')">Download Notes</button>
+                    <p class="note-message">Your notes will be saved as a .txt file on your device.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav a');
+            const sections = document.querySelectorAll('.main section');
+            const progressFill = document.getElementById('progress');
+            
+            window.addEventListener('scroll', function() {
+                const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+                progressFill.style.width = scrollPercent + '%';
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+                    sections.forEach(sec => sec.classList.remove('active'));
+                    document.getElementById(targetId).classList.add('active');
+                    document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            document.getElementById('topic-finalisation').classList.add('active');
+            progressFill.style.width = '0%';
+        });
+        
+        function downloadSpecificNotes(id) {
+            const notes = document.getElementById(id).value;
+            if (!notes.trim()) {
+                alert('Please enter notes before downloading.');
+                return;
+            }
+            const blob = new Blob([notes], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${id}_notes.txt`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(a.href);
+            }, 0);
+            alert(`Notes for ${id} downloaded successfully as ${id}_notes.txt`);
+        }
+    </script>
+</body>
+</html>
+```
